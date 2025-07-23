@@ -115,14 +115,33 @@ public class VentaController {
     }
     
     @GetMapping("/hoy")
-    public ResponseEntity<List<Venta>> findVentasDelDia() {
-        return ResponseEntity.ok(ventaService.findVentasDelDia());
+    public ResponseEntity<List<VentaDTO>> findVentasDelDia() {
+        List<Venta> ventas = ventaService.findVentasDelDia();
+        List<VentaDTO> ventasDTO = ventas.stream()
+            .map(venta -> new VentaDTO(
+                venta.getId(),
+                venta.getFecha(),
+                venta.getNumeroReferencia(),
+                venta.getTipoTransaccion().toString(),
+                venta.getMonto(),
+                venta.getDescripcion(),
+                venta.getCliente().getNombre(),
+                venta.getUsuario().getNombre(),
+                venta.getCliente().getDui()
+            ))
+            .collect(java.util.stream.Collectors.toList());
+        return ResponseEntity.ok(ventasDTO);
+    }
+
+    @GetMapping("/estadisticas")
+    public ResponseEntity<?> estadisticasVentas(){
+        return ResponseEntity.ok(ventaService.getEstadisticasVentas());
     }
     
-    @GetMapping("/suma-monto/{tipo}")
-    public ResponseEntity<BigDecimal> sumMontoByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
-        return ResponseEntity.ok(ventaService.sumMontoByTipoTransaccion(tipo));
-    }
+//    @GetMapping("/suma-monto/{tipo}")
+//    public ResponseEntity<BigDecimal> sumMontoByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
+//        return ResponseEntity.ok(ventaService.sumMontoByTipoTransaccion(tipo));
+//    }
     
     @GetMapping("/suma-cantidad/{tipo}")
     public ResponseEntity<Integer> sumCantidadByTipoTransaccion(@PathVariable TipoTransaccion tipo) {

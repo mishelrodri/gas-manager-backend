@@ -33,9 +33,12 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     List<Venta> findByFechaBetween(@Param("fechaInicio") LocalDateTime fechaInicio, @Param("fechaFin") LocalDateTime fechaFin);
     
     // Buscar ventas del día
-    @Query(value = "SELECT v FROM venta v WHERE DATE(v.fecha) = CURRENT_DATE ORDER BY v.fecha DESC", nativeQuery = true)
+    @Query(value = "SELECT * FROM venta v WHERE DATE(v.fecha) = CURRENT_DATE ORDER BY v.fecha DESC", nativeQuery = true)
     List<Venta> findVentasDelDia();
-    
+
+    //monto vendido del dia
+    @Query(value = "SELECT SUM(v.monto) FROM venta v WHERE DATE(v.fecha) = CURRENT_DATE", nativeQuery = true)
+    BigDecimal findMontoVendidoDelDia();
     // Sumar monto total por tipo de transacción
     @Query("SELECT SUM(v.monto) FROM Venta v WHERE v.tipoTransaccion = :tipo")
     BigDecimal sumMontoByTipoTransaccion(@Param("tipo") TipoTransaccion tipo);
@@ -51,4 +54,8 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     // Top clientes por monto
     @Query("SELECT v.cliente, SUM(v.monto) as total FROM Venta v GROUP BY v.cliente ORDER BY total DESC")
     List<Object[]> findTopClientesByMonto();
+
+    //Total de ventas GENERAL
+    @Query(value = "SELECT SUM(v.monto) FROM venta v ", nativeQuery = true)
+    BigDecimal findTotalVentas();
 }

@@ -147,12 +147,7 @@ public class VentaServiceImpl implements IVentaService {
         return ventaRepository.findVentasDelDia();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public BigDecimal sumMontoByTipoTransaccion(TipoTransaccion tipo) {
-        BigDecimal resultado = ventaRepository.sumMontoByTipoTransaccion(tipo);
-        return resultado != null ? resultado : BigDecimal.ZERO;
-    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -199,15 +194,9 @@ public class VentaServiceImpl implements IVentaService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public BigDecimal calcularTotalVentasDelDia() {
-        return sumMontoByTipoTransaccion(TipoTransaccion.VENDIDO);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BigDecimal calcularTotalComprasDelDia() {
-        return sumMontoByTipoTransaccion(TipoTransaccion.COMPRADO);
+    public BigDecimal calcularVentaTotal() {
+        BigDecimal resultado = ventaRepository.findTotalVentas();
+        return resultado != null ? resultado : BigDecimal.ZERO;
     }
 
     @Override
@@ -221,11 +210,13 @@ public class VentaServiceImpl implements IVentaService {
     public Map<String, Object> getEstadisticasVentas() {
         Map<String, Object> estadisticas = new HashMap<>();
 
-        estadisticas.put("totalVentasDelDia", calcularTotalVentasDelDia());
-        estadisticas.put("totalComprasDelDia", calcularTotalComprasDelDia());
+        estadisticas.put("cantidadDeVentas", ventaRepository.count());
+        estadisticas.put("montoTotal", ventaRepository.findTotalVentas());
+        estadisticas.put("montoTotalDelDia", ventaRepository.findMontoVendidoDelDia());
         estadisticas.put("cantidadVentasDelDia", findVentasDelDia().size());
-        estadisticas.put("tambosVendidosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.VENDIDO));
-        estadisticas.put("tambosCompradosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.COMPRADO));
+
+//        estadisticas.put("tambosVendidosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.VENDIDO));
+//        estadisticas.put("tambosCompradosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.COMPRADO));
 
         return estadisticas;
     }

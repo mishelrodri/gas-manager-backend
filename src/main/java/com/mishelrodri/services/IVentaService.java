@@ -29,7 +29,7 @@ public interface IVentaService extends ICrud<Venta, Long> {
     
     List<Venta> findVentasDelDia();
     
-    BigDecimal sumMontoByTipoTransaccion(TipoTransaccion tipo);
+//    BigDecimal sumMontoByTipoTransaccion(TipoTransaccion tipo);
     
     Integer sumCantidadByTipoTransaccion(TipoTransaccion tipo);
     
@@ -42,9 +42,9 @@ public interface IVentaService extends ICrud<Venta, Long> {
     
     String generarNumeroReferencia();
     
-    BigDecimal calcularTotalVentasDelDia();
-    
-    BigDecimal calcularTotalComprasDelDia();
+
+
+    BigDecimal calcularVentaTotal();
     
     List<Venta> getReporteVentasPorPeriodo(LocalDateTime inicio, LocalDateTime fin);
     
