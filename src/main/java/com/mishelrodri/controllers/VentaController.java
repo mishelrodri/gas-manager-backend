@@ -3,10 +3,12 @@ package com.mishelrodri.controllers;
 import com.mishelrodri.dto.CrearVentaRequest;
 import com.mishelrodri.dto.Mensaje;
 import com.mishelrodri.dto.VentaDTO;
+import com.mishelrodri.dto.VentaFilterDTO;
 import com.mishelrodri.entities.Venta;
 import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
 import com.mishelrodri.entities.Usuario;
+import com.mishelrodri.interfaces.IVentaDTO;
 import com.mishelrodri.services.IVentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -137,7 +139,18 @@ public class VentaController {
     public ResponseEntity<?> estadisticasVentas(){
         return ResponseEntity.ok(ventaService.getEstadisticasVentas());
     }
-    
+
+
+    @PostMapping("/filter")
+    public ResponseEntity<?> buscarVentas(@RequestBody VentaFilterDTO dto){
+        try {
+            List<IVentaDTO> ventas = ventaService.buscarVentas(dto.busqueda(), dto.fecha());
+            return ResponseEntity.ok(ventas);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new Mensaje("Error al filtrar las ventas: " + e.getMessage()));
+        }
+    }
 //    @GetMapping("/suma-monto/{tipo}")
 //    public ResponseEntity<BigDecimal> sumMontoByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
 //        return ResponseEntity.ok(ventaService.sumMontoByTipoTransaccion(tipo));

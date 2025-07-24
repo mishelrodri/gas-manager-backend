@@ -7,6 +7,7 @@ import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
 import com.mishelrodri.entities.Usuario;
 import com.mishelrodri.exceptions.CustomException;
+import com.mishelrodri.interfaces.IVentaDTO;
 import com.mishelrodri.repositories.ClienteRepository;
 import com.mishelrodri.repositories.UsuarioRepository;
 import com.mishelrodri.repositories.VentaRepository;
@@ -219,5 +220,10 @@ public class VentaServiceImpl implements IVentaService {
 //        estadisticas.put("tambosCompradosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.COMPRADO));
 
         return estadisticas;
+    }
+
+    @Override
+    public List<IVentaDTO> buscarVentas(String busqueda, String fecha) {
+        return ventaRepository.buscarVentas(busqueda, fecha);
     }
 }

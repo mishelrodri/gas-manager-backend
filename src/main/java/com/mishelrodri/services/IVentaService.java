@@ -6,6 +6,8 @@ import com.mishelrodri.entities.Venta;
 import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
 import com.mishelrodri.entities.Usuario;
+import com.mishelrodri.interfaces.IVentaDTO;
+
 import java.time.LocalDateTime;
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,4 +51,6 @@ public interface IVentaService extends ICrud<Venta, Long> {
     List<Venta> getReporteVentasPorPeriodo(LocalDateTime inicio, LocalDateTime fin);
     
     Map<String, Object> getEstadisticasVentas();
+
+    List<IVentaDTO> buscarVentas(String busqueda, String fecha);
 }
