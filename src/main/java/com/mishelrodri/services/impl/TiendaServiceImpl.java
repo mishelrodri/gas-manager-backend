@@ -102,18 +102,18 @@ public class TiendaServiceImpl implements ITiendaService {
         return tiendaRepository.findTiendasConTambosPrestados();
     }
     
-    @Override
-    @Transactional(readOnly = true)
-    public List<Tienda> findTiendasDisponiblesParaPrestamo() {
-        return tiendaRepository.findTiendasDisponiblesParaPrestamo();
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<Tienda> findTiendasDisponiblesParaPrestamo() {
+//        return tiendaRepository.findTiendasDisponiblesParaPrestamo();
+//    }
     
-    @Override
-    @Transactional(readOnly = true)
-    public List<Tienda> findTiendasConCapacidadMaxima() {
-        return tiendaRepository.findTiendasConCapacidadMaxima();
-    }
-    
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<Tienda> findTiendasConCapacidadMaxima() {
+//        return tiendaRepository.findTiendasConCapacidadMaxima();
+//    }
+//
     @Override
     @Transactional(readOnly = true)
     public Integer sumTotalTambosPrestados() {
@@ -187,18 +187,17 @@ public class TiendaServiceImpl implements ITiendaService {
         
         return tiendaGuardada;
     }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public boolean puedePrestarTambos(Long tiendaId, Integer cantidad) {
-        Optional<Tienda> tienda = findById(tiendaId);
-        if (tienda.isPresent() && tienda.get().getActivo()) {
-            int tambosPrestados = tienda.get().getNumeroTambosPrestados();
-            int capacidadMaxima = tienda.get().getNumeroTambosMaximo();
-            return (tambosPrestados + cantidad) <= capacidadMaxima;
-        }
-        return false;
-    }
+
+//    @Override
+//    @Transactional(readOnly = true)
+//    public boolean puedePrestarTambos(Long tiendaId, Integer cantidad) {
+//        Optional<Tienda> tienda = findById(tiendaId);
+//        if (tienda.isPresent() && tienda.get().getActivo()) {
+//            int tambosPrestados = tienda.get().getNumeroTambosPrestados();
+//            return (tambosPrestados + cantidad) <= capacidadMaxima;
+//        }
+//        return false;
+//    }
     
     @Override
     public Tienda actualizarTambosPrestados(Long tiendaId, Integer nuevaCantidad) {
@@ -214,15 +213,15 @@ public class TiendaServiceImpl implements ITiendaService {
         throw new CustomException(HttpStatus.NOT_FOUND, "Tienda no encontrada");
     }
     
-    @Override
-    @Transactional(readOnly = true)
-    public Integer getTambosDisponiblesParaPrestamo(Long tiendaId) {
-        Optional<Tienda> tienda = findById(tiendaId);
-        if (tienda.isPresent()) {
-            return tienda.get().getNumeroTambosMaximo() - tienda.get().getNumeroTambosPrestados();
-        }
-        return 0;
-    }
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Integer getTambosDisponiblesParaPrestamo(Long tiendaId) {
+//        Optional<Tienda> tienda = findById(tiendaId);
+//        if (tienda.isPresent()) {
+//            return tienda.get().getNumeroTambosMaximo() - tienda.get().getNumeroTambosPrestados();
+//        }
+//        return 0;
+//    }
     
     @Override
     @Transactional(readOnly = true)
@@ -237,12 +236,12 @@ public class TiendaServiceImpl implements ITiendaService {
         
         List<Tienda> tiendasActivas = findByActivoTrue();
         List<Tienda> tiendasConTambos = findTiendasConTambosPrestados();
-        List<Tienda> tiendasDisponibles = findTiendasDisponiblesParaPrestamo();
+//        List<Tienda> tiendasDisponibles = findTiendasDisponiblesParaPrestamo();
         
         estadisticas.put("totalTiendas", count());
         estadisticas.put("tiendasActivas", tiendasActivas.size());
         estadisticas.put("tiendasConTambos", tiendasConTambos.size());
-        estadisticas.put("tiendasDisponibles", tiendasDisponibles.size());
+//        estadisticas.put("tiendasDisponibles", tiendasDisponibles.size());
         estadisticas.put("totalTambosPrestados", sumTotalTambosPrestados());
         
         return estadisticas;

@@ -210,7 +210,8 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
         
         switch (tipo) {
             case PRESTAMO:
-                return tiendaService.puedePrestarTambos(tienda.getId(), cantidad);
+//                return tiendaService.puedePrestarTambos(tienda.getId(), cantidad);
+                return cantidad > 0;
             case DEVOLUCION:
                 return tienda.getNumeroTambosPrestados() >= cantidad;
             case AJUSTE:

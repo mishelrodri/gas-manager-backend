@@ -83,6 +83,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
                     c.nombre ILIKE CONCAT('%', :busqueda, '%')
                  OR c.apellido ILIKE CONCAT('%', :busqueda, '%')
                  OR c.dui ILIKE CONCAT('%', :busqueda, '%')
+                 OR v.numero_referencia ILIKE CONCAT('%', :busqueda, '%')
                )
              )
             

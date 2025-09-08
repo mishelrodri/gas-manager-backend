@@ -23,12 +23,12 @@ public interface TiendaRepository extends JpaRepository<Tienda, Long> {
     List<Tienda> findTiendasConTambosPrestados();
     
     // Buscar tiendas que pueden recibir más tambos
-    @Query("SELECT t FROM Tienda t WHERE t.numeroTambosPrestados < t.numeroTambosMaximo AND t.activo = true")
-    List<Tienda> findTiendasDisponiblesParaPrestamo();
+//    @Query("SELECT t FROM Tienda t WHERE t.numeroTambosPrestados < t.numeroTambosMaximo AND t.activo = true")
+//    List<Tienda> findTiendasDisponiblesParaPrestamo();
     
     // Buscar tiendas con capacidad máxima alcanzada
-    @Query("SELECT t FROM Tienda t WHERE t.numeroTambosPrestados >= t.numeroTambosMaximo AND t.activo = true")
-    List<Tienda> findTiendasConCapacidadMaxima();
+//    @Query("SELECT t FROM Tienda t WHERE t.numeroTambosPrestados >= t.numeroTambosMaximo AND t.activo = true")
+//    List<Tienda> findTiendasConCapacidadMaxima();
     
     // Sumar total de tambos prestados
     @Query("SELECT SUM(t.numeroTambosPrestados) FROM Tienda t WHERE t.activo = true")

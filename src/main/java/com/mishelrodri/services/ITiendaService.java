@@ -14,9 +14,9 @@ public interface ITiendaService extends ICrud<Tienda, Long> {
     
     List<Tienda> findTiendasConTambosPrestados();
     
-    List<Tienda> findTiendasDisponiblesParaPrestamo();
+//    List<Tienda> findTiendasDisponiblesParaPrestamo();
     
-    List<Tienda> findTiendasConCapacidadMaxima();
+//    List<Tienda> findTiendasConCapacidadMaxima();
     
     Integer sumTotalTambosPrestados();
     
@@ -31,11 +31,11 @@ public interface ITiendaService extends ICrud<Tienda, Long> {
     
     Tienda crearTiendaConMovimientoInicial(Tienda tienda, Usuario usuario, String observaciones);
     
-    boolean puedePrestarTambos(Long tiendaId, Integer cantidad);
+//    boolean puedePrestarTambos(Long tiendaId, Integer cantidad);
     
     Tienda actualizarTambosPrestados(Long tiendaId, Integer nuevaCantidad);
     
-    Integer getTambosDisponiblesParaPrestamo(Long tiendaId);
+//    Integer getTambosDisponiblesParaPrestamo(Long tiendaId);
     
     List<Tienda> buscarTiendas(String termino);
     

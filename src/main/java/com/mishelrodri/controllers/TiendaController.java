@@ -81,15 +81,15 @@ public class TiendaController {
         return ResponseEntity.ok(tiendaService.findTiendasConTambosPrestados());
     }
     
-    @GetMapping("/disponibles-prestamo")
-    public ResponseEntity<List<Tienda>> findTiendasDisponiblesParaPrestamo() {
-        return ResponseEntity.ok(tiendaService.findTiendasDisponiblesParaPrestamo());
-    }
-    
-    @GetMapping("/capacidad-maxima")
-    public ResponseEntity<List<Tienda>> findTiendasConCapacidadMaxima() {
-        return ResponseEntity.ok(tiendaService.findTiendasConCapacidadMaxima());
-    }
+//    @GetMapping("/disponibles-prestamo")
+//    public ResponseEntity<List<Tienda>> findTiendasDisponiblesParaPrestamo() {
+//        return ResponseEntity.ok(tiendaService.findTiendasDisponiblesParaPrestamo());
+//    }
+//
+//    @GetMapping("/capacidad-maxima")
+//    public ResponseEntity<List<Tienda>> findTiendasConCapacidadMaxima() {
+//        return ResponseEntity.ok(tiendaService.findTiendasConCapacidadMaxima());
+//    }
     
     @GetMapping("/total-tambos-prestados")
     public ResponseEntity<Integer> sumTotalTambosPrestados() {

@@ -24,8 +24,6 @@ public class Tienda {
     @Column(name = "numero_tambos_prestados", nullable = false)
     private Integer numeroTambosPrestados = 0;
 
-    @Column(name = "numero_tambos", nullable = false)
-    private Integer numeroTambosMaximo = 0;
     
     @Column(length = 200)
     private String direccion;
