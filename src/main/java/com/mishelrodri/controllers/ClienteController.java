@@ -18,7 +18,13 @@ public class ClienteController {
     
     @Autowired
     private IClienteService clienteService;
-    
+
+
+    @GetMapping("/tests")
+    public ResponseEntity<?> test(){
+        return ResponseEntity.ok("Si funcioa la seguridad");
+    }
+
     @GetMapping
     public ResponseEntity<List<Cliente>> findAll() {
         return ResponseEntity.ok(clienteService.findAll());
