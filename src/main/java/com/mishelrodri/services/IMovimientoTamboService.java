@@ -29,22 +29,9 @@ public interface IMovimientoTamboService extends ICrud<MovimientoTambo, Long> {
     
     List<MovimientoTambo> findHistorialCompletoByTienda(Tienda tienda);
     
-    // Métodos de negocio específicos
-    MovimientoTambo registrarPrestamo(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones);
-    
+    // Métodos de negocio simplificados
+    MovimientoTambo registrarPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones);
+    MovimientoTambo registrarOnlyPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones);
+
     MovimientoTambo registrarDevolucion(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones);
-    
-    MovimientoTambo registrarAjuste(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones);
-    
-    MovimientoTambo registrarAjusteInicial(Tienda tienda, Usuario usuario, Integer cantidadInicial, String observaciones);
-    
-    boolean validarMovimiento(Tienda tienda, TipoMovimientoTambo tipo, Integer cantidad);
-    
-    Integer calcularSaldoActualTienda(Tienda tienda);
-    
-    List<MovimientoTambo> getReporteMovimientosPorPeriodo(LocalDateTime inicio, LocalDateTime fin);
-    
-    Map<String, Object> getEstadisticasMovimientos();
-    
-    Map<String, Integer> getResumenMovimientosPorTipo();
 }

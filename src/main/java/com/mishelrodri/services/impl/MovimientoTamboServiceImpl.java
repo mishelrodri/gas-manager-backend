@@ -127,15 +127,13 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
         return movimientoTamboRepository.findHistorialCompletoByTienda(tienda);
     }
     
-    // Métodos de negocio específicos
+    // Métodos de negocio simplificados
     @Override
-    public MovimientoTambo registrarPrestamo(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones) {
-        if (!validarMovimiento(tienda, TipoMovimientoTambo.PRESTAMO, cantidad)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede realizar el préstamo. Capacidad insuficiente.");
-        }
-        
+    public MovimientoTambo registrarPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones) {
+
+        Tienda objTienda = tiendaService.findById(tienda).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
         MovimientoTambo movimiento = new MovimientoTambo();
-        movimiento.setTienda(tienda);
+        movimiento.setTienda(objTienda);
         movimiento.setUsuario(usuario);
         movimiento.setTipoMovimiento(TipoMovimientoTambo.PRESTAMO);
         movimiento.setCantidad(cantidad);
@@ -143,119 +141,54 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
         movimiento.setFecha(LocalDateTime.now());
         
         // Actualizar tambos prestados en la tienda
-        int nuevaCantidad = tienda.getNumeroTambosPrestados() + cantidad;
-        tiendaService.actualizarTambosPrestados(tienda.getId(), nuevaCantidad);
+        int nuevaCantidad = objTienda.getNumeroTambosPrestados() + cantidad;
+        tiendaService.actualizarTambosPrestados(tienda, nuevaCantidad);
         
+        return save(movimiento);
+    }
+
+    @Override
+    public MovimientoTambo registrarOnlyPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones) {
+
+        Tienda objTienda = tiendaService.findById(tienda).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
+        MovimientoTambo movimiento = new MovimientoTambo();
+        movimiento.setTienda(objTienda);
+        movimiento.setUsuario(usuario);
+        movimiento.setTipoMovimiento(TipoMovimientoTambo.PRESTAMO);
+        movimiento.setCantidad(cantidad);
+        movimiento.setObservaciones(observaciones);
+        movimiento.setFecha(LocalDateTime.now());
+
         return save(movimiento);
     }
     
     @Override
     public MovimientoTambo registrarDevolucion(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones) {
-        if (!validarMovimiento(tienda, TipoMovimientoTambo.DEVOLUCION, cantidad)) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "No se puede realizar la devolución. Cantidad insuficiente.");
-        }
-        
-        MovimientoTambo movimiento = new MovimientoTambo();
-        movimiento.setTienda(tienda);
-        movimiento.setUsuario(usuario);
-        movimiento.setTipoMovimiento(TipoMovimientoTambo.DEVOLUCION);
-        movimiento.setCantidad(cantidad);
-        movimiento.setObservaciones(observaciones);
-        movimiento.setFecha(LocalDateTime.now());
-        
-        // Actualizar tambos prestados en la tienda
-        int nuevaCantidad = tienda.getNumeroTambosPrestados() - cantidad;
-        tiendaService.actualizarTambosPrestados(tienda.getId(), nuevaCantidad);
-        
-        return save(movimiento);
-    }
-    
-    @Override
-    public MovimientoTambo registrarAjuste(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones) {
-        MovimientoTambo movimiento = new MovimientoTambo();
-        movimiento.setTienda(tienda);
-        movimiento.setUsuario(usuario);
-        movimiento.setTipoMovimiento(TipoMovimientoTambo.AJUSTE);
-        movimiento.setCantidad(cantidad);
-        movimiento.setObservaciones(observaciones);
-        movimiento.setFecha(LocalDateTime.now());
-        
-        // Para ajustes regulares, la cantidad se suma al total actual
-        int nuevaCantidad = tienda.getNumeroTambosPrestados() + cantidad;
-        tiendaService.actualizarTambosPrestados(tienda.getId(), nuevaCantidad);
-        
-        return save(movimiento);
-    }
-    
-    @Override
-    public MovimientoTambo registrarAjusteInicial(Tienda tienda, Usuario usuario, Integer cantidadInicial, String observaciones) {
-        MovimientoTambo movimiento = new MovimientoTambo();
-        movimiento.setTienda(tienda);
-        movimiento.setUsuario(usuario);
-        movimiento.setTipoMovimiento(TipoMovimientoTambo.AJUSTE);
-        movimiento.setCantidad(cantidadInicial);
-        movimiento.setObservaciones(observaciones);
-        movimiento.setFecha(LocalDateTime.now());
-        
-        // Para ajuste inicial, establecer la cantidad exacta (no sumar)
-        tiendaService.actualizarTambosPrestados(tienda.getId(), cantidadInicial);
-        
-        return save(movimiento);
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public boolean validarMovimiento(Tienda tienda, TipoMovimientoTambo tipo, Integer cantidad) {
-        if (cantidad <= 0) return false;
-        
-        switch (tipo) {
-            case PRESTAMO:
-//                return tiendaService.puedePrestarTambos(tienda.getId(), cantidad);
-                return cantidad > 0;
-            case DEVOLUCION:
-                return tienda.getNumeroTambosPrestados() >= cantidad;
-            case AJUSTE:
-                return true; // Los ajustes siempre son válidos
-            default:
-                return false;
-        }
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public Integer calcularSaldoActualTienda(Tienda tienda) {
-        return tienda.getNumeroTambosPrestados();
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public List<MovimientoTambo> getReporteMovimientosPorPeriodo(LocalDateTime inicio, LocalDateTime fin) {
-        return findByFechaBetween(inicio, fin);
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public Map<String, Object> getEstadisticasMovimientos() {
-        Map<String, Object> estadisticas = new HashMap<>();
-        
-        estadisticas.put("totalMovimientos", count());
-        estadisticas.put("movimientosDelDia", findMovimientosDelDia().size());
-        estadisticas.put("prestamosDelDia", sumCantidadByTipoMovimiento(TipoMovimientoTambo.PRESTAMO));
-        estadisticas.put("devolucionesDelDia", sumCantidadByTipoMovimiento(TipoMovimientoTambo.DEVOLUCION));
-        estadisticas.put("ajustesDelDia", sumCantidadByTipoMovimiento(TipoMovimientoTambo.AJUSTE));
-        
-        return estadisticas;
-    }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public Map<String, Integer> getResumenMovimientosPorTipo() {
-        Map<String, Integer> resumen = new HashMap<>();
-        
-        resumen.put("PRESTAMO", sumCantidadByTipoMovimiento(TipoMovimientoTambo.PRESTAMO));
-        resumen.put("DEVOLUCION", sumCantidadByTipoMovimiento(TipoMovimientoTambo.DEVOLUCION));
-        resumen.put("AJUSTE", sumCantidadByTipoMovimiento(TipoMovimientoTambo.AJUSTE));
-        
-        return resumen;
+//       try{
+           Tienda objTienda = tiendaService.findById(tienda.getId()).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
+
+           if (objTienda.getNumeroTambosPrestados() < cantidad){
+               throw new CustomException(HttpStatus.BAD_REQUEST, "Esta intentado devolver más tambos de los prestados");
+           }
+
+           MovimientoTambo movimiento = new MovimientoTambo();
+
+           movimiento.setTienda(objTienda);
+           movimiento.setUsuario(usuario);
+           movimiento.setTipoMovimiento(TipoMovimientoTambo.DEVOLUCION);
+           movimiento.setCantidad(cantidad);
+           movimiento.setObservaciones(observaciones);
+           movimiento.setFecha(LocalDateTime.now());
+
+           // Actualizar tambos prestados en la tienda
+           int nuevaCantidad = objTienda.getNumeroTambosPrestados() - cantidad;
+
+           tiendaService.actualizarTambosPrestados(objTienda.getId(), nuevaCantidad);
+
+           return save(movimiento);
+//       }catch (Exception e){
+//           System.out.println("🔴🔴🔴🔴🔴 " + e);
+//       }
+//       return null;
     }
 }

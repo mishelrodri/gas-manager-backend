@@ -1,5 +1,7 @@
 package com.mishelrodri.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,14 +35,21 @@ public class MovimientoTambo {
     // Relaciones
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tienda_id", nullable = false)
+    @JsonIgnore
     private Tienda tienda;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
+    @JsonIgnore
     private Usuario usuario;
     
     @PrePersist
     protected void onCreate() {
         fecha = LocalDateTime.now();
+    }
+
+    @JsonProperty("usuarioId")
+    public Long getUsuarioId() {
+        return (usuario != null) ? usuario.getId() : null;
     }
 }

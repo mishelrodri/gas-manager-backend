@@ -70,9 +70,8 @@ public class MovimientoTamboController {
     
     // Endpoints específicos de MovimientoTambo
     
-    @PostMapping("/tienda/{tiendaId}")
+    @GetMapping("/tienda/{tiendaId}")
     public ResponseEntity<List<MovimientoTambo>> findByTienda(@PathVariable Long tiendaId) {
-        // Se necesita obtener la tienda primero
         try {
             Tienda tienda = new Tienda();
             tienda.setId(tiendaId);
@@ -82,7 +81,7 @@ public class MovimientoTamboController {
         }
     }
     
-    @PostMapping("/usuario/{usuarioId}")
+    @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<MovimientoTambo>> findByUsuario(@PathVariable Long usuarioId) {
         try {
             Usuario usuario = new Usuario();
@@ -98,71 +97,16 @@ public class MovimientoTamboController {
         return ResponseEntity.ok(movimientoTamboService.findByTipoMovimiento(tipoMovimiento));
     }
     
-    @GetMapping("/fecha")
-    public ResponseEntity<List<MovimientoTambo>> findByFechaBetween(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
-        return ResponseEntity.ok(movimientoTamboService.findByFechaBetween(fechaInicio, fechaFin));
-    }
-    
-    @GetMapping("/tienda-fecha/{tiendaId}")
-    public ResponseEntity<List<MovimientoTambo>> findByTiendaAndFechaBetween(
-            @PathVariable Long tiendaId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin) {
-        try {
-            Tienda tienda = new Tienda();
-            tienda.setId(tiendaId);
-            return ResponseEntity.ok(movimientoTamboService.findByTiendaAndFechaBetween(tienda, fechaInicio, fechaFin));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @GetMapping("/hoy")
-    public ResponseEntity<List<MovimientoTambo>> findMovimientosDelDia() {
-        return ResponseEntity.ok(movimientoTamboService.findMovimientosDelDia());
-    }
-    
-    @GetMapping("/suma-tipo/{tipo}")
-    public ResponseEntity<Integer> sumCantidadByTipoMovimiento(@PathVariable TipoMovimientoTambo tipo) {
-        return ResponseEntity.ok(movimientoTamboService.sumCantidadByTipoMovimiento(tipo));
-    }
-    
-    @GetMapping("/ultimos-tienda/{tiendaId}")
-    public ResponseEntity<List<MovimientoTambo>> findUltimosMovimientosByTienda(@PathVariable Long tiendaId) {
-        try {
-            Tienda tienda = new Tienda();
-            tienda.setId(tiendaId);
-            return ResponseEntity.ok(movimientoTamboService.findUltimosMovimientosByTienda(tienda));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @GetMapping("/historial-tienda/{tiendaId}")
-    public ResponseEntity<List<MovimientoTambo>> findHistorialCompletoByTienda(@PathVariable Long tiendaId) {
-        try {
-            Tienda tienda = new Tienda();
-            tienda.setId(tiendaId);
-            return ResponseEntity.ok(movimientoTamboService.findHistorialCompletoByTienda(tienda));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    // Endpoints para registrar movimientos específicos
+    // Endpoints simplificados para registrar movimientos
     
     @PostMapping("/prestamo")
     public ResponseEntity<MovimientoTambo> registrarPrestamo(@RequestBody PrestamoRequest request) {
         try {
-            Tienda tienda = new Tienda();
-            tienda.setId(request.tiendaId());
             Usuario usuario = new Usuario();
             usuario.setId(request.usuarioId());
             
             MovimientoTambo movimiento = movimientoTamboService.registrarPrestamo(
-                tienda, usuario, request.cantidad(), request.observaciones()
+                request.tiendaId(), usuario, request.cantidad(), request.observaciones()
             );
             return ResponseEntity.ok(movimiento);
         } catch (Exception e) {
@@ -172,7 +116,7 @@ public class MovimientoTamboController {
     
     @PostMapping("/devolucion")
     public ResponseEntity<MovimientoTambo> registrarDevolucion(@RequestBody DevolucionRequest request) {
-        try {
+
             Tienda tienda = new Tienda();
             tienda.setId(request.tiendaId());
             Usuario usuario = new Usuario();
@@ -182,48 +126,10 @@ public class MovimientoTamboController {
                 tienda, usuario, request.cantidad(), request.observaciones()
             );
             return ResponseEntity.ok(movimiento);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @PostMapping("/ajuste")
-    public ResponseEntity<MovimientoTambo> registrarAjuste(@RequestBody AjusteRequest request) {
-        try {
-            Tienda tienda = new Tienda();
-            tienda.setId(request.tiendaId());
-            Usuario usuario = new Usuario();
-            usuario.setId(request.usuarioId());
-            
-            MovimientoTambo movimiento = movimientoTamboService.registrarAjuste(
-                tienda, usuario, request.cantidad(), request.observaciones()
-            );
-            return ResponseEntity.ok(movimiento);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
-    
-    @PostMapping("/ajuste-inicial")
-    public ResponseEntity<MovimientoTambo> registrarAjusteInicial(@RequestBody AjusteInicialRequest request) {
-        try {
-            Tienda tienda = new Tienda();
-            tienda.setId(request.tiendaId());
-            Usuario usuario = new Usuario();
-            usuario.setId(request.usuarioId());
-            
-            MovimientoTambo movimiento = movimientoTamboService.registrarAjusteInicial(
-                tienda, usuario, request.cantidadInicial(), request.observaciones()
-            );
-            return ResponseEntity.ok(movimiento);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+
     }
     
     // Records para las requests
     public record PrestamoRequest(Long tiendaId, Long usuarioId, Integer cantidad, String observaciones) {}
     public record DevolucionRequest(Long tiendaId, Long usuarioId, Integer cantidad, String observaciones) {}
-    public record AjusteRequest(Long tiendaId, Long usuarioId, Integer cantidad, String observaciones) {}
-    public record AjusteInicialRequest(Long tiendaId, Long usuarioId, Integer cantidadInicial, String observaciones) {}
 }

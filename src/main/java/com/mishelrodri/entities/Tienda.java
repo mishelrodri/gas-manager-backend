@@ -1,5 +1,6 @@
 package com.mishelrodri.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -45,6 +46,7 @@ public class Tienda {
     
     // Relaciones
     @OneToMany(mappedBy = "tienda", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<MovimientoTambo> movimientos;
     
     @PrePersist

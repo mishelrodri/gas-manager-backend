@@ -34,12 +34,12 @@ public class TiendaController {
     
     @PostMapping
     public ResponseEntity<Tienda> save(@RequestBody Tienda tienda) {
-        try {
-            Tienda savedTienda = tiendaService.save(tienda);
+//        try {
+            Tienda savedTienda = tiendaService.saveFirts(tienda);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedTienda);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().build();
+//        }
     }
     
     @PutMapping("/{id}")
@@ -81,29 +81,9 @@ public class TiendaController {
         return ResponseEntity.ok(tiendaService.findTiendasConTambosPrestados());
     }
     
-//    @GetMapping("/disponibles-prestamo")
-//    public ResponseEntity<List<Tienda>> findTiendasDisponiblesParaPrestamo() {
-//        return ResponseEntity.ok(tiendaService.findTiendasDisponiblesParaPrestamo());
-//    }
-//
-//    @GetMapping("/capacidad-maxima")
-//    public ResponseEntity<List<Tienda>> findTiendasConCapacidadMaxima() {
-//        return ResponseEntity.ok(tiendaService.findTiendasConCapacidadMaxima());
-//    }
-    
     @GetMapping("/total-tambos-prestados")
     public ResponseEntity<Integer> sumTotalTambosPrestados() {
         return ResponseEntity.ok(tiendaService.sumTotalTambosPrestados());
-    }
-    
-    @GetMapping("/buscar-contacto")
-    public ResponseEntity<List<Tienda>> findByContactoContaining(@RequestParam String contacto) {
-        return ResponseEntity.ok(tiendaService.findByContactoContainingIgnoreCase(contacto));
-    }
-    
-    @GetMapping("/existe-nombre/{nombre}")
-    public ResponseEntity<Boolean> existsByNombre(@PathVariable String nombre) {
-        return ResponseEntity.ok(tiendaService.existsByNombre(nombre));
     }
     
     @PutMapping("/{id}/activar")
@@ -118,11 +98,9 @@ public class TiendaController {
     
     @PutMapping("/{id}/desactivar")
     public ResponseEntity<Tienda> deactivateTienda(@PathVariable Long id) {
-        try {
+
             Tienda tienda = tiendaService.deactivateTienda(id);
             return ResponseEntity.ok(tienda);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+
     }
 }

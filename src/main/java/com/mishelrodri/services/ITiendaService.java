@@ -8,6 +8,9 @@ import java.util.Map;
 public interface ITiendaService extends ICrud<Tienda, Long> {
     
     // Métodos específicos de Tienda
+
+    Tienda saveFirts(Tienda t);
+
     List<Tienda> findByActivoTrue();
     
     List<Tienda> findByNombreContainingIgnoreCase(String nombre);
@@ -29,7 +32,7 @@ public interface ITiendaService extends ICrud<Tienda, Long> {
     
     Tienda deactivateTienda(Long id);
     
-    Tienda crearTiendaConMovimientoInicial(Tienda tienda, Usuario usuario, String observaciones);
+//    Tienda crearTiendaConMovimientoInicial(Tienda tienda, Usuario usuario, String observaciones);
     
 //    boolean puedePrestarTambos(Long tiendaId, Integer cantidad);
     
