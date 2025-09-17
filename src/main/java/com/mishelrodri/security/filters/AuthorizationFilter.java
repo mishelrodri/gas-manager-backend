@@ -35,10 +35,11 @@ public class AuthorizationFilter extends OncePerRequestFilter {
 
         System.out.println(tokenHeader);
 
-        String token = tokenHeader.substring(7);
 
         Map<String, Object> res = new HashMap<>();
         if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+            String token = tokenHeader.substring(7);
+            
             if (!jwtUtils.verificarToken(token)) {
 
                 res.put("mensaje", "El token es INVALIDO");
