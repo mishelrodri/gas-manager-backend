@@ -77,12 +77,7 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
     public List<MovimientoTambo> findByTienda(Tienda tienda) {
         return movimientoTamboRepository.findByTienda(tienda);
     }
-    
-    @Override
-    @Transactional(readOnly = true)
-    public List<MovimientoTambo> findByUsuario(Usuario usuario) {
-        return movimientoTamboRepository.findByUsuario(usuario);
-    }
+
     
     @Override
     @Transactional(readOnly = true)
@@ -129,12 +124,11 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
     
     // Métodos de negocio simplificados
     @Override
-    public MovimientoTambo registrarPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones) {
+    public MovimientoTambo registrarPrestamo(Long tienda, Integer cantidad, String observaciones) {
 
         Tienda objTienda = tiendaService.findById(tienda).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
         MovimientoTambo movimiento = new MovimientoTambo();
         movimiento.setTienda(objTienda);
-        movimiento.setUsuario(usuario);
         movimiento.setTipoMovimiento(TipoMovimientoTambo.PRESTAMO);
         movimiento.setCantidad(cantidad);
         movimiento.setObservaciones(observaciones);
@@ -148,12 +142,11 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
     }
 
     @Override
-    public MovimientoTambo registrarOnlyPrestamo(Long tienda, Usuario usuario, Integer cantidad, String observaciones) {
+    public MovimientoTambo registrarOnlyPrestamo(Long tienda, Integer cantidad, String observaciones) {
 
         Tienda objTienda = tiendaService.findById(tienda).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
         MovimientoTambo movimiento = new MovimientoTambo();
         movimiento.setTienda(objTienda);
-        movimiento.setUsuario(usuario);
         movimiento.setTipoMovimiento(TipoMovimientoTambo.PRESTAMO);
         movimiento.setCantidad(cantidad);
         movimiento.setObservaciones(observaciones);
@@ -163,7 +156,7 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
     }
     
     @Override
-    public MovimientoTambo registrarDevolucion(Tienda tienda, Usuario usuario, Integer cantidad, String observaciones) {
+    public MovimientoTambo registrarDevolucion(Tienda tienda, Integer cantidad, String observaciones) {
 //       try{
            Tienda objTienda = tiendaService.findById(tienda.getId()).orElseThrow(()-> new CustomException(HttpStatus.NOT_FOUND,"La tienda no existe"));
 
@@ -174,7 +167,6 @@ public class MovimientoTamboServiceImpl implements IMovimientoTamboService {
            MovimientoTambo movimiento = new MovimientoTambo();
 
            movimiento.setTienda(objTienda);
-           movimiento.setUsuario(usuario);
            movimiento.setTipoMovimiento(TipoMovimientoTambo.DEVOLUCION);
            movimiento.setCantidad(cantidad);
            movimiento.setObservaciones(observaciones);

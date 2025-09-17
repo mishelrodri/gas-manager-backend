@@ -48,8 +48,7 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Venta> ventas;
     
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MovimientoTambo> movimientosTambo;
+
     
     @PrePersist
     protected void onCreate() {

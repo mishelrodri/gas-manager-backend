@@ -37,19 +37,12 @@ public class MovimientoTambo {
     @JoinColumn(name = "tienda_id", nullable = false)
     @JsonIgnore
     private Tienda tienda;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    @JsonIgnore
-    private Usuario usuario;
+
     
     @PrePersist
     protected void onCreate() {
         fecha = LocalDateTime.now();
     }
 
-    @JsonProperty("usuarioId")
-    public Long getUsuarioId() {
-        return (usuario != null) ? usuario.getId() : null;
-    }
+
 }

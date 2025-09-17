@@ -81,16 +81,7 @@ public class MovimientoTamboController {
         }
     }
     
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<MovimientoTambo>> findByUsuario(@PathVariable Long usuarioId) {
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setId(usuarioId);
-            return ResponseEntity.ok(movimientoTamboService.findByUsuario(usuario));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+
     
     @GetMapping("/tipo/{tipoMovimiento}")
     public ResponseEntity<List<MovimientoTambo>> findByTipoMovimiento(@PathVariable TipoMovimientoTambo tipoMovimiento) {
@@ -102,11 +93,9 @@ public class MovimientoTamboController {
     @PostMapping("/prestamo")
     public ResponseEntity<MovimientoTambo> registrarPrestamo(@RequestBody PrestamoRequest request) {
         try {
-            Usuario usuario = new Usuario();
-            usuario.setId(request.usuarioId());
-            
+
             MovimientoTambo movimiento = movimientoTamboService.registrarPrestamo(
-                request.tiendaId(), usuario, request.cantidad(), request.observaciones()
+                request.tiendaId(), request.cantidad(), request.observaciones()
             );
             return ResponseEntity.ok(movimiento);
         } catch (Exception e) {
@@ -119,11 +108,9 @@ public class MovimientoTamboController {
 
             Tienda tienda = new Tienda();
             tienda.setId(request.tiendaId());
-            Usuario usuario = new Usuario();
-            usuario.setId(request.usuarioId());
-            
+
             MovimientoTambo movimiento = movimientoTamboService.registrarDevolucion(
-                tienda, usuario, request.cantidad(), request.observaciones()
+                tienda, request.cantidad(), request.observaciones()
             );
             return ResponseEntity.ok(movimiento);
 

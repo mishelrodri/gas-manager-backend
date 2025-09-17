@@ -3,7 +3,6 @@ package com.mishelrodri.repositories;
 import com.mishelrodri.entities.MovimientoTambo;
 import com.mishelrodri.entities.TipoMovimientoTambo;
 import com.mishelrodri.entities.Tienda;
-import com.mishelrodri.entities.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,9 +15,6 @@ public interface MovimientoTamboRepository extends JpaRepository<MovimientoTambo
     
     // Buscar por tienda
     List<MovimientoTambo> findByTienda(Tienda tienda);
-    
-    // Buscar por usuario
-    List<MovimientoTambo> findByUsuario(Usuario usuario);
     
     // Buscar por tipo de movimiento
     List<MovimientoTambo> findByTipoMovimiento(TipoMovimientoTambo tipoMovimiento);

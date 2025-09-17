@@ -49,12 +49,10 @@ public class TiendaServiceImpl implements ITiendaService {
     @Override
     public Tienda saveFirts(Tienda entity) {
         Tienda tienda = tiendaRepository.save(entity);
-        Usuario usuario = new Usuario();
-        usuario.setId(3l);
 
         movimientoTamboService
                 .registrarOnlyPrestamo(tienda.getId(),
-                        usuario, entity.getNumeroTambosPrestados(),
+                         entity.getNumeroTambosPrestados(),
                         "Tambos prestados inicialmente");
 
         return tienda;
