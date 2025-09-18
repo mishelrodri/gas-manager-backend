@@ -1,0 +1,59 @@
+# Dockerignore - archivos a excluir del contexto de Docker
+
+# Directorios de Maven
+
+target/
+!target/\*.jar
+
+# IDE files
+
+.idea/
+\*.iml
+.vscode/
+.settings/
+.project
+.classpath
+
+# OS files
+
+.DS_Store
+Thumbs.db
+
+# Git
+
+.git/
+.gitignore
+
+# Logs
+
+logs/
+\*.log
+
+# Maven wrapper jar (se incluye porque lo necesitamos para el build)
+
+# !.mvn/wrapper/maven-wrapper.jar
+
+# Node modules (si hay frontend)
+
+node_modules/
+
+# Archivos temporales
+
+tmp/
+temp/
+
+# Documentación no esencial para el contenedor
+
+README.md
+HELP.md
+ESTRUCTURA_ENTIDADES.md
+
+# Archivos de desarrollo local
+
+application-dev.properties
+application-local.properties
+
+# Archivos de respaldo
+
+_.bak
+_.backup

@@ -64,7 +64,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Orígenes permitidos
-        config.setAllowedOrigins(List.of("http://localhost:5173", "https://tudominio.com"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "https://gas-manager-frontend.vercel.app"));
 
         // Métodos permitidos
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
