@@ -5,7 +5,6 @@ import com.mishelrodri.dto.VentaDTO;
 import com.mishelrodri.entities.Venta;
 import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
-import com.mishelrodri.entities.Usuario;
 import com.mishelrodri.interfaces.IVentaDTO;
 
 import java.time.LocalDateTime;
@@ -23,8 +22,7 @@ public interface IVentaService extends ICrud<Venta, Long> {
 
     List<VentaDTO> findAllVentaDTO();
     
-    List<Venta> findByUsuario(Usuario usuario);
-    
+
     List<Venta> findByTipoTransaccion(TipoTransaccion tipoTransaccion);
     
     List<Venta> findByFechaBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);

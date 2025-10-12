@@ -93,16 +93,7 @@ public class VentaController {
         }
     }
     
-    @GetMapping("/usuario/{usuarioId}")
-    public ResponseEntity<List<Venta>> findByUsuario(@PathVariable Long usuarioId) {
-        try {
-            Usuario usuario = new Usuario();
-            usuario.setId(usuarioId);
-            return ResponseEntity.ok(ventaService.findByUsuario(usuario));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+
     
     @GetMapping("/tipo/{tipoTransaccion}")
     public ResponseEntity<List<Venta>> findByTipoTransaccion(@PathVariable TipoTransaccion tipoTransaccion) {
@@ -128,7 +119,6 @@ public class VentaController {
                 venta.getMonto(),
                 venta.getDescripcion(),
                 venta.getCliente().getNombre(),
-                venta.getUsuario().getNombre(),
                 venta.getCliente().getDui()
             ))
             .collect(java.util.stream.Collectors.toList());
@@ -181,13 +171,13 @@ public class VentaController {
     }
     
     @PostMapping("/crear")
-    public ResponseEntity<Venta> crearVenta(@RequestBody CrearVentaRequest request) {
-        try {
+    public ResponseEntity<?> crearVenta(@RequestBody CrearVentaRequest request) {
+
+
+
             Venta venta = ventaService.crearVenta(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(venta);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+            return ResponseEntity.status(HttpStatus.CREATED).body(new Mensaje("Venta creada"));
+
     }
     
     @GetMapping("/generar-numero-referencia")

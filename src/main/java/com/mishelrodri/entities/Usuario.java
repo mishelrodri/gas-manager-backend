@@ -45,8 +45,8 @@ public class Usuario {
 
     
     // Relaciones
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Venta> ventas;
+//    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<Venta> ventas;
     
 
     

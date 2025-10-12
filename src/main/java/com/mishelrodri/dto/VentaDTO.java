@@ -15,7 +15,6 @@ public record VentaDTO(
         BigDecimal monto,
         String descripcion,
         String nombreCliente,
-        String clienteDui,
-        String usuario
+        String clienteDui
 ) {
 }

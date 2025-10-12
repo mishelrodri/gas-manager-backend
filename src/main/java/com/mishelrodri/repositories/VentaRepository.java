@@ -3,7 +3,6 @@ package com.mishelrodri.repositories;
 import com.mishelrodri.entities.Venta;
 import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
-import com.mishelrodri.entities.Usuario;
 import com.mishelrodri.interfaces.IVentaDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,9 +22,6 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
 
     // Buscar por cliente
     List<Venta> findByCliente(Cliente cliente);
-
-    // Buscar por usuario
-    List<Venta> findByUsuario(Usuario usuario);
 
     // Buscar por tipo de transacción
     List<Venta> findByTipoTransaccion(TipoTransaccion tipoTransaccion);

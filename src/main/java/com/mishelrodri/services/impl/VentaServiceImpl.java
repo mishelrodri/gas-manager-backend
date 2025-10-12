@@ -62,8 +62,7 @@ public class VentaServiceImpl implements IVentaService {
                             .monto(venta.getMonto())
                             .descripcion(venta.getDescripcion())
                             .nombreCliente(venta.getCliente().getNombre() + " " + venta.getCliente().getApellido())
-                            .clienteDui(venta.getCliente().getDui())
-                            .usuario(venta.getUsuario().getNombre()).build();
+                            .clienteDui(venta.getCliente().getDui()).build();
 
                 }).collect(Collectors.toList());
     }
@@ -124,11 +123,7 @@ public class VentaServiceImpl implements IVentaService {
         return ventaRepository.findByCliente(cliente);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Venta> findByUsuario(Usuario usuario) {
-        return ventaRepository.findByUsuario(usuario);
-    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -174,10 +169,8 @@ public class VentaServiceImpl implements IVentaService {
     public Venta crearVenta(CrearVentaRequest dto) {
 
         Cliente cliente = findClienteById(dto.clienteId());
-        Usuario usuario = findUsuarioById(dto.usuarioId());
         Venta venta = Venta.builder()
                 .cliente(cliente)
-                .usuario(usuario)
                 .tipoTransaccion(dto.tipoTransaccion())
                 .monto(dto.monto())
                 .cantidad(dto.cantidad())

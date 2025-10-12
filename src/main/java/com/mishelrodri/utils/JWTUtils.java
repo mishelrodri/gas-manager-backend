@@ -25,7 +25,7 @@ public class JWTUtils {
 
     public String crearToken(String username){
         long ahora = System.currentTimeMillis();
-        long treintaMinutos = 30 * 60 * 1000; // 30 minutos en milisegundos
+        long treintaMinutos = java.util.concurrent.TimeUnit.HOURS.toMillis(8);
 
         return Jwts.builder()
                 .subject(username)

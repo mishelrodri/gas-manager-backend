@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 
 public record CrearVentaRequest(
         Long clienteId,
-        Long usuarioId,
         TipoTransaccion tipoTransaccion,
         BigDecimal monto,
         Integer cantidad,
