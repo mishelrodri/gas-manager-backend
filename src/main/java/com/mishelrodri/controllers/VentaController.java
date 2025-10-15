@@ -116,10 +116,11 @@ public class VentaController {
                 venta.getFecha(),
                 venta.getNumeroReferencia(),
                 venta.getTipoTransaccion().toString(),
-                venta.getMonto(),
                 venta.getDescripcion(),
                 venta.getCliente().getNombre(),
-                venta.getCliente().getDui()
+                venta.getCliente().getDui(),
+                venta.getCantidad(),
+                venta.isSubsidio()
             ))
             .collect(java.util.stream.Collectors.toList());
         return ResponseEntity.ok(ventasDTO);
@@ -133,24 +134,20 @@ public class VentaController {
 
     @PostMapping("/filter")
     public ResponseEntity<?> buscarVentas(@RequestBody VentaFilterDTO dto){
-        try {
             List<IVentaDTO> ventas = ventaService.buscarVentas(dto.busqueda(), dto.fecha());
             return ResponseEntity.ok(ventas);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest()
-                    .body(new Mensaje("Error al filtrar las ventas: " + e.getMessage()));
-        }
+
     }
 //    @GetMapping("/suma-monto/{tipo}")
 //    public ResponseEntity<BigDecimal> sumMontoByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
 //        return ResponseEntity.ok(ventaService.sumMontoByTipoTransaccion(tipo));
 //    }
-    
+
     @GetMapping("/suma-cantidad/{tipo}")
-    public ResponseEntity<Integer> sumCantidadByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
+    public ResponseEntity<Long> sumCantidadByTipoTransaccion(@PathVariable TipoTransaccion tipo) {
         return ResponseEntity.ok(ventaService.sumCantidadByTipoTransaccion(tipo));
     }
-    
+
     @GetMapping("/cliente-fecha/{clienteId}")
     public ResponseEntity<List<Venta>> findByClienteAndFechaBetween(
             @PathVariable Long clienteId,
@@ -164,12 +161,9 @@ public class VentaController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
-    @GetMapping("/top-clientes")
-    public ResponseEntity<List<Object[]>> findTopClientesByMonto() {
-        return ResponseEntity.ok(ventaService.findTopClientesByMonto());
-    }
-    
+
+
+
     @PostMapping("/crear")
     public ResponseEntity<?> crearVenta(@RequestBody CrearVentaRequest request) {
 

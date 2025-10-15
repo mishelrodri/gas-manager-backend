@@ -2,10 +2,10 @@ package com.mishelrodri.services.impl;
 
 import com.mishelrodri.dto.CrearVentaRequest;
 import com.mishelrodri.dto.VentaDTO;
-import com.mishelrodri.entities.Venta;
-import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Cliente;
+import com.mishelrodri.entities.TipoTransaccion;
 import com.mishelrodri.entities.Usuario;
+import com.mishelrodri.entities.Venta;
 import com.mishelrodri.exceptions.CustomException;
 import com.mishelrodri.interfaces.IVentaDTO;
 import com.mishelrodri.repositories.ClienteRepository;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,10 +58,11 @@ public class VentaServiceImpl implements IVentaService {
                             .fecha(venta.getFecha())
                             .numeroReferencia(venta.getNumeroReferencia())
                             .tipoTransaccion(venta.getTipoTransaccion().name())
-                            .monto(venta.getMonto())
                             .descripcion(venta.getDescripcion())
                             .nombreCliente(venta.getCliente().getNombre() + " " + venta.getCliente().getApellido())
-                            .clienteDui(venta.getCliente().getDui()).build();
+                            .clienteDui(venta.getCliente().getDui())
+                            .cantidad(venta.getCantidad())
+                            .build();
 
                 }).collect(Collectors.toList());
     }
@@ -147,8 +147,14 @@ public class VentaServiceImpl implements IVentaService {
 
     @Override
     @Transactional(readOnly = true)
-    public Integer sumCantidadByTipoTransaccion(TipoTransaccion tipo) {
-        Integer resultado = ventaRepository.sumCantidadByTipoTransaccion(tipo);
+    public Long sumCantidadByTipoTransaccion(TipoTransaccion tipo) {
+        Long resultado = ventaRepository.sumCantidadByTipoTransaccionByDia(tipo.name());
+        return resultado != null ? resultado : 0;
+    }
+
+    @Transactional(readOnly = true)
+    public Long sumCantidadByTipoTransaccionMes(TipoTransaccion tipo) {
+        Long resultado = ventaRepository.sumCantidadByTipoTransaccionByMes(tipo.name());
         return resultado != null ? resultado : 0;
     }
 
@@ -158,11 +164,6 @@ public class VentaServiceImpl implements IVentaService {
         return ventaRepository.findByClienteAndFechaBetween(cliente, fechaInicio, fechaFin);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Object[]> findTopClientesByMonto() {
-        return ventaRepository.findTopClientesByMonto();
-    }
 
     // Métodos de negocio específicos
     @Override
@@ -172,11 +173,11 @@ public class VentaServiceImpl implements IVentaService {
         Venta venta = Venta.builder()
                 .cliente(cliente)
                 .tipoTransaccion(dto.tipoTransaccion())
-                .monto(dto.monto())
                 .cantidad(dto.cantidad())
                 .descripcion(dto.descripcion())
                 .numeroReferencia(dto.numeroReferencia().equals("") ? null : dto.numeroReferencia())
-                .fecha(LocalDateTime.now()).build();
+                .isSubsidio(dto.isSubsidio())
+                .fecha(dto.fecha()).build();
 
         return save(venta);
     }
@@ -187,11 +188,6 @@ public class VentaServiceImpl implements IVentaService {
         return "REF-" + timestamp;
     }
 
-    @Override
-    public BigDecimal calcularVentaTotal() {
-        BigDecimal resultado = ventaRepository.findTotalVentas();
-        return resultado != null ? resultado : BigDecimal.ZERO;
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -203,11 +199,11 @@ public class VentaServiceImpl implements IVentaService {
     @Transactional(readOnly = true)
     public Map<String, Object> getEstadisticasVentas() {
         Map<String, Object> estadisticas = new HashMap<>();
-
-        estadisticas.put("cantidadDeVentas", ventaRepository.count());
-        estadisticas.put("montoTotal", ventaRepository.findTotalVentas());
-        estadisticas.put("montoTotalDelDia", ventaRepository.findMontoVendidoDelDia());
-        estadisticas.put("cantidadVentasDelDia", findVentasDelDia().size());
+//        System.out.println("✅ACAAA " + ventaRepository.getFecha());
+        estadisticas.put("tambosVendidosDia", sumCantidadByTipoTransaccion(TipoTransaccion.VENDIDO));
+        estadisticas.put("tambosCompradosDia", sumCantidadByTipoTransaccion(TipoTransaccion.COMPRADO));
+        estadisticas.put("tambosVendidosMes", sumCantidadByTipoTransaccionMes(TipoTransaccion.VENDIDO));
+        estadisticas.put("tambosCompradosMes", sumCantidadByTipoTransaccionMes(TipoTransaccion.COMPRADO));
 
 //        estadisticas.put("tambosVendidosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.VENDIDO));
 //        estadisticas.put("tambosCompradosDelDia", sumCantidadByTipoTransaccion(TipoTransaccion.COMPRADO));

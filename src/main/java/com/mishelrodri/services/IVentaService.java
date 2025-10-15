@@ -30,12 +30,12 @@ public interface IVentaService extends ICrud<Venta, Long> {
     List<Venta> findVentasDelDia();
     
 //    BigDecimal sumMontoByTipoTransaccion(TipoTransaccion tipo);
-    
-    Integer sumCantidadByTipoTransaccion(TipoTransaccion tipo);
+
+    Long sumCantidadByTipoTransaccion(TipoTransaccion tipo);
     
     List<Venta> findByClienteAndFechaBetween(Cliente cliente, LocalDateTime fechaInicio, LocalDateTime fechaFin);
     
-    List<Object[]> findTopClientesByMonto();
+//    List<Object[]> findTopClientesByMonto();
     
     // Métodos de negocio específicos
     Venta crearVenta(CrearVentaRequest dto);
@@ -44,8 +44,8 @@ public interface IVentaService extends ICrud<Venta, Long> {
     
 
 
-    BigDecimal calcularVentaTotal();
-    
+//    BigDecimal calcularVentaTotal();
+
     List<Venta> getReporteVentasPorPeriodo(LocalDateTime inicio, LocalDateTime fin);
     
     Map<String, Object> getEstadisticasVentas();

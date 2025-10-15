@@ -34,29 +34,31 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
     @Query(value = "SELECT * FROM venta v WHERE DATE(v.fecha) = CURRENT_DATE ORDER BY v.fecha DESC", nativeQuery = true)
     List<Venta> findVentasDelDia();
 
-    //monto vendido del dia
-    @Query(value = "SELECT SUM(v.monto) FROM venta v WHERE DATE(v.fecha) = CURRENT_DATE", nativeQuery = true)
-    BigDecimal findMontoVendidoDelDia();
+    @Query(value = """
+  SELECT COALESCE(SUM(v.cantidad), 0)
+  FROM venta v
+  WHERE v.tipo_transaccion = :tipo
+    AND v.fecha = CURRENT_DATE
+""", nativeQuery = true)
+    Long sumCantidadByTipoTransaccionByDia(@Param("tipo") String tipo);
 
-    // Sumar monto total por tipo de transacción
-    @Query("SELECT SUM(v.monto) FROM Venta v WHERE v.tipoTransaccion = :tipo")
-    BigDecimal sumMontoByTipoTransaccion(@Param("tipo") TipoTransaccion tipo);
+//    @Query(value = "SELECT TO_CHAR(CURRENT_TIMESTAMP, 'YYYY-MM-DD HH24:MI:SS') AS fecha_hora_actual", nativeQuery = true)
+//    String getFecha();
 
-    // Contar tambos vendidos/comprados
-    @Query("SELECT SUM(v.cantidad) FROM Venta v WHERE v.tipoTransaccion = :tipo")
-    Integer sumCantidadByTipoTransaccion(@Param("tipo") TipoTransaccion tipo);
+    @Query(value = """
+  SELECT COALESCE(SUM(v.cantidad), 0)
+  FROM venta v
+  WHERE v.tipo_transaccion = :tipo
+    AND date_trunc('month', v.fecha) = date_trunc('month', CURRENT_DATE)
+""", nativeQuery = true)
+    Long sumCantidadByTipoTransaccionByMes(@Param("tipo") String tipo /* tipo.name() */);
+
 
     // Ventas de un cliente en un período
     @Query("SELECT v FROM Venta v WHERE v.cliente = :cliente AND v.fecha BETWEEN :fechaInicio AND :fechaFin ORDER BY v.fecha DESC")
     List<Venta> findByClienteAndFechaBetween(@Param("cliente") Cliente cliente, @Param("fechaInicio") LocalDateTime fechaInicio, @Param("fechaFin") LocalDateTime fechaFin);
 
-    // Top clientes por monto
-    @Query("SELECT v.cliente, SUM(v.monto) as total FROM Venta v GROUP BY v.cliente ORDER BY total DESC")
-    List<Object[]> findTopClientesByMonto();
 
-    //Total de ventas GENERAL
-    @Query(value = "SELECT SUM(v.monto) FROM venta v ", nativeQuery = true)
-    BigDecimal findTotalVentas();
 
     // Filtro para traer las ventas
 
@@ -64,10 +66,10 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
             SELECT
              v.id,
              v.fecha,
-             v.numero_referencia as numeroReferencia,
-                        v.tipo_transaccion as tipoTransaccion,
-                        v.monto,
-                        v.descripcion,
+             v.cantidad,
+            v.tipo_transaccion as tipoTransaccion,
+            v.descripcion,
+            v.is_subsidio as isSubsidio,
              concat(c.nombre, ' ', c.apellido) as nombreCliente,
              c.dui as clienteDui
            FROM venta v
@@ -79,7 +81,7 @@ public interface VentaRepository extends JpaRepository<Venta, Long> {
                     c.nombre ILIKE CONCAT('%', :busqueda, '%')
                  OR c.apellido ILIKE CONCAT('%', :busqueda, '%')
                  OR c.dui ILIKE CONCAT('%', :busqueda, '%')
-                 OR v.numero_referencia ILIKE CONCAT('%', :busqueda, '%')
+                 OR v.descripcion ILIKE CONCAT('%', :busqueda, '%')
                )
              )
             

@@ -1,15 +1,13 @@
 package com.mishelrodri.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "venta")
@@ -24,7 +22,7 @@ public class Venta {
     private Long id;
     
     @Column(nullable = false)
-    private LocalDateTime fecha;
+    private LocalDate fecha;
     
     @Column(name = "numero_referencia", unique = true)
     private String numeroReferencia;
@@ -33,8 +31,8 @@ public class Venta {
     @Column(name = "tipo_transaccion", nullable = false)
     private TipoTransaccion tipoTransaccion;
     
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal monto;
+//    @Column(nullable = false, precision = 10, scale = 2)
+//    private BigDecimal monto;
     
     @Column(nullable = false)
     private Integer cantidad; // Cantidad de tambos
@@ -47,13 +45,16 @@ public class Venta {
     @JoinColumn(name = "cliente_id", nullable = false)
     @JsonBackReference
     private Cliente cliente;
+
+    @Column(name = "is_subsidio", nullable = false)
+    private boolean isSubsidio = false;
     
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "usuario_id", nullable = false)
 //    private Usuario usuario;
     
-    @PrePersist
-    protected void onCreate() {
-        fecha = LocalDateTime.now();
-    }
+//    @PrePersist
+//    protected void onCreate() {
+//        fecha = LocalDateTime.now();
+//    }
 }
