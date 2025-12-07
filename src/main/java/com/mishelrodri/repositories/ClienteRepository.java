@@ -39,4 +39,9 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     // Clientes navideños del año actual
     @Query("SELECT c FROM Cliente c WHERE c.añoNavidadActivo = :año AND c.activo = true")
     List<Cliente> findClientesNavideñosDelAño(@Param("año") Integer año);
+
+
+    List<Cliente> findByNavidadTrue();
+
+    List<Cliente> findByNavidadFalse();
 }

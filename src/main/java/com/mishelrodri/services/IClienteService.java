@@ -1,5 +1,6 @@
 package com.mishelrodri.services;
 
+import com.mishelrodri.dto.Mensaje;
 import com.mishelrodri.entities.Cliente;
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +36,11 @@ public interface IClienteService extends ICrud<Cliente, Long> {
     Cliente removerAñoNavidad(Long id);
     
     List<Cliente> buscarClientes(String termino);
+
+    Mensaje marcarNavidad(List<Long> clientes);
+
+    List<Cliente> buscarClientesConNavidad();
+
+    List<Cliente> buscarClientesSinNavidad();
+
 }

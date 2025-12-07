@@ -1,6 +1,7 @@
 package com.mishelrodri.controllers;
 
 import com.mishelrodri.dto.Mensaje;
+import com.mishelrodri.dto.NavidadesDTO;
 import com.mishelrodri.entities.Cliente;
 import com.mishelrodri.services.IClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,5 +136,20 @@ public class ClienteController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
+    }
+
+    @PostMapping("/navidades")
+    public ResponseEntity<?> marcarNavidades(@RequestBody NavidadesDTO navidadesDTO){
+        return ResponseEntity.ok(clienteService.marcarNavidad(navidadesDTO.navidades()));
+    }
+
+    @GetMapping("/con-navidad")
+    public ResponseEntity<List<Cliente>> buscarClientesConNavidad() {
+        return ResponseEntity.ok(clienteService.buscarClientesConNavidad());
+    }
+
+    @GetMapping("/sin-navidad")
+    public ResponseEntity<List<Cliente>> buscarClientesSinNavidad() {
+        return ResponseEntity.ok(clienteService.buscarClientesSinNavidad());
     }
 }

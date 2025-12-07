@@ -50,6 +50,9 @@ public class Cliente {
     
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @Column(nullable = false)
+    private Boolean navidad = false;
     
     // Relaciones
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

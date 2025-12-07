@@ -1,5 +1,6 @@
 package com.mishelrodri.services.impl;
 
+import com.mishelrodri.dto.Mensaje;
 import com.mishelrodri.entities.Cliente;
 import com.mishelrodri.exceptions.CustomException;
 import com.mishelrodri.repositories.ClienteRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,4 +170,35 @@ public class ClienteServiceImpl implements IClienteService {
         // Buscar por nombre o apellido que contengan el término
         return clienteRepository.findByNombreAndApellidoContainingIgnoreCase(termino, termino);
     }
+
+    @Override
+    public Mensaje marcarNavidad(List<Long> clientes){
+
+        List<Cliente> clientesNavidad = new ArrayList<>();
+
+        clientes.stream().forEach((clienteId)->{
+            Optional<Cliente> cliente1 = clienteRepository.findById(clienteId);
+            if (cliente1.isPresent()) {
+                cliente1.get().setNavidad(true);
+                clientesNavidad.add(cliente1.get());
+            }
+        });
+
+        clienteRepository.saveAll(clientesNavidad);
+
+        return new Mensaje("navidades registradas");
+
+    }
+
+    @Override
+    public List<Cliente> buscarClientesConNavidad() {
+        return clienteRepository.findByNavidadTrue();
+    }
+
+    @Override
+    public List<Cliente> buscarClientesSinNavidad() {
+        return clienteRepository.findByNavidadFalse();
+    }
+
+
 }
